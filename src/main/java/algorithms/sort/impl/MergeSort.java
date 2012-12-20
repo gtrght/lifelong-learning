@@ -10,36 +10,34 @@ public class MergeSort implements Sorter {
     @Override
     public int[] sort(int[] input) {
         if (input.length <= 1) return input;
-        return sort0(input, new int[input.length], 0, (input.length - 1) / 2, input.length - 1);
+        int[] result = sort0(input, 0, (input.length - 1) / 2, input.length - 1);
+        System.arraycopy(result, 0, input, 0, result.length);
+        return result;
     }
 
-    private int[] sort0(int[] input, int[] out, int start, int med, int end) {
+    private int[] sort0(int[] input, int start, int med, int end) {
         if (end - start == 0) {
-            out[start] = input[start];
-            return out;
+            return new int[]{input[start]};
         }
-        sort0(input, out, start, start + (med - start) / 2, med);
-        sort0(input, out, med + 1, med + 1 + (end - med) / 2, end);
+        int[] arr1 = sort0(input, start, start + (med - start) / 2, med);
+        int[] arr2 = sort0(input, med + 1, med + 1 + (end - med) / 2, end);
 
-        //merge the sorted arrays
-        int index = start;
-        int in1 = start;
-        int in2 = med + 1;
+        int in1 = 0;
+        int in2 = 0;
 
-        boolean leftBound;
+        int[] result = new int[arr1.length + arr2.length];
 
-        while ((leftBound = in1 <= med) || (in2 <= end)) {
-            if (!leftBound || (in2 <= end && input[in1] > input[in2])) {
-                out[index] = input[in2];
+
+        boolean left;
+        while ((left = in1 < arr1.length) || (in2 < arr2.length)) {
+            if ((in2 < arr2.length && left && (arr1[in1] > arr2[in2])) || !left) {
+                result[in1 + in2] = arr2[in2];
                 in2++;
             } else {
-                out[index] = input[in1];
+                result[in1 + in2] = arr1[in1];
                 in1++;
             }
-            index++;
         }
-        System.arraycopy(out, start, input, start, end - start);
-
-        return out;
+        return result;
     }
 }
