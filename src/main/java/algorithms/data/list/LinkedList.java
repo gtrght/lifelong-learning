@@ -15,7 +15,8 @@ public class LinkedList<T1> {
     public void add(T1 value) {
         Node<T1> node = new Node<T1>(value);
 
-        if (head == null) head = node;
+        if (head == null)
+            head = node;
         else
             tail().next = node;
     }
