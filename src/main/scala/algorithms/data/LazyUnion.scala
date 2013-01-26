@@ -7,8 +7,8 @@ import scala.collection.JavaConversions._
  * Date: 26.01.13
  */
 class LazyUnion[T](objects: Seq[T]) {
-  private var obj2pos: Map[T, Int] = objects.zip(0 until objects.size).toMap
-  private var parents: Array[(Int, Int)] = (0 until objects.size).zip(Array.fill(objects.size) {
+  private val obj2pos: Map[T, Int] = objects.zip(0 until objects.size).toMap
+  private val parents: Array[(Int, Int)] = (0 until objects.size).zip(Array.fill(objects.size) {
     0
   }).toArray
 
@@ -18,11 +18,14 @@ class LazyUnion[T](objects: Seq[T]) {
       else {
         val candidate: (Int, Int) = parents(position)
         if (candidate._1 == position) candidate
-        else traverseUp(candidate._1)
+        else {
+          val up: (Int, Int) = traverseUp(candidate._1)
+          parents(position) = (up._1, candidate._2)
+          up
+        }
       }
     }
-    val up: (Int, Int) = traverseUp(obj2pos.getOrElse(x, -1))
-    up
+    traverseUp(obj2pos.getOrElse(x, -1))
   }
 
   def findRoot(x: T): Int = findRootTuple(x)._1
