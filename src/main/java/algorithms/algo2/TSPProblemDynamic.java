@@ -17,7 +17,7 @@ import static java.util.Collections.singletonList;
  * User: Vasily Vlasov
  * Date: 28.01.13
  */
-public class TSPProblemDynamic implements TSPProblem{
+public class TSPProblemDynamic implements TSPProblem {
 
     private Collection<List<Integer>> addPointToList(Collection<List<Integer>> sets, final int point) {
         return Collections2.transform(sets, new Function<List<Integer>, List<Integer>>() {
@@ -50,18 +50,13 @@ public class TSPProblemDynamic implements TSPProblem{
     }
 
 
-
-
     public float calculateTSP(int numberOfPoints, Function2<Integer, Integer, Float> length) {
         final List<Integer> points = new ArrayList<Integer>(numberOfPoints);
         for (int i = 0; i < numberOfPoints; i++) points.add(i);
 
-
         Table<String, Integer, Float> previousStep = HashBasedTable.create((int) Math.pow(2, points.size()), points.size());
 
-        for (Integer point : points) {
-            previousStep.put("0", 0, 0f);
-        }
+        previousStep.put("0", 0, 0f);
 
         for (int i = 2; i <= points.size(); i++) {
             Table<String, Integer, Float> paths = HashBasedTable.create((int) Math.pow(2, points.size()), points.size());

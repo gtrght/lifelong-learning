@@ -57,17 +57,71 @@ public class TSPProblemTest {
 
     @Test
     public void calculateTSPKruscalTrivial() throws IOException {
-        float shortestPath = new TSPProblemKruscal().calculateTSP(4, createXYFunction("tsp-xy1.txt"));
+        float shortestPath = new TSPProblemKruscal().calculateTSP(4, createFixedPathFunction("tsp1.txt"));
 
-        assertThat(shortestPath, Matchers.equalTo(8356.305f));
+        assertThat(shortestPath, Matchers.equalTo(12f));
+    }
+
+    @Test
+    public void calculateTSPBoundsTrivial() throws IOException {
+        float shortestPath = new TSPProblemBranchesBounds().calculateTSP(4, createFixedPathFunction("tsp1.txt"));
+
+        assertThat(shortestPath, Matchers.equalTo(9f));
+    }
+
+    @Test
+    public void calculateTSPBoundsMedium() throws IOException {
+        float shortestPath = new TSPProblemBranchesBounds().calculateTSP(4, createFixedPathFunction("tsp2.txt"));
+
+        assertThat(shortestPath, Matchers.equalTo(21f));
+    }
+
+    @Test
+    public void calculateTSPDynamicMedium() throws IOException {
+        float shortestPath = new TSPProblemDynamic().calculateTSP(4, createFixedPathFunction("tsp2.txt"));
+
+        assertThat(shortestPath, Matchers.equalTo(21f));
+    }
+
+    @Test
+    public void calculateTSPBranchesMedium1() throws IOException {
+        String[] files = new String[]{"tsp-xy2.txt", "tsp-xy3.txt", "tsp-xy4.txt", "tsp-xy5.txt"};
+        int[] expectations = new int[]{8387, 8607, 32, 15, 4356};
+
+        for (int i = 0; i < files.length; i++) {
+            String file = files[i];
+            int lines = countLines(file);
+            float shortestPath = new TSPProblemBranchesBounds().calculateTSP(lines, createXYFunction(file));
+
+            assertThat(((int) shortestPath), Matchers.equalTo(expectations[i]));
+        }
+    }
+
+    @Test
+    public void calculateTSPBoundsBurma() throws IOException {
+        float shortestPath = new TSPProblemBranchesBounds().calculateTSP(14, createXYFunction("tsp-xy6.txt"));
+
+        assertThat(shortestPath, Matchers.equalTo(30f));
+    }
+
+    @Test
+    @Ignore
+    public void calculateTSPBoundsLarge() throws IOException {
+        float shortestPath = new TSPProblemBranchesBounds().calculateTSP(25, createXYFunction("tsp-xy1.txt"));
+
+        assertThat(shortestPath, Matchers.equalTo(9f));
+    }
+
+    @Test
+    public void calculateTSPKruscalLarge() throws IOException {
+        float shortestPath = new TSPProblemKruscal().calculateTSP(25, createXYFunction("tsp-xy1.txt"));
+        assertThat(shortestPath, Matchers.equalTo(32605.363F));
     }
 
     @Test
     @Ignore
     public void calculateTSPNonTrivial() throws IOException {
         float shortestPath = problem.calculateTSP(25, createXYFunction("tsp-xy1.txt"));
-
-        assertThat(shortestPath, Matchers.equalTo(9f));
     }
 
 
@@ -117,6 +171,10 @@ public class TSPProblemTest {
                 return map.containsKey(key) ? map.get(key) : Float.MAX_VALUE;
             }
         };
+    }
+
+    private int countLines(String s) throws IOException {
+        return IOUtils.readLines(TSPProblemTest.class.getResourceAsStream(s)).size();
     }
 
 
