@@ -1,5 +1,6 @@
 package algorithms.algo2;
 
+import algorithms.data.graph.BellmanFordModifiedAlgo;
 import com.google.common.collect.HashMultimap;
 import org.hamcrest.Matchers;
 import org.junit.Test;

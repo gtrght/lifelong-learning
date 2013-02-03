@@ -2,7 +2,7 @@ package algorithms.algo2;
 
 import algorithms.data.graph.AdjGraph;
 import algorithms.data.graph.GraphUtils;
-import org.hamcrest.Matcher;
+import algorithms.data.graph.KasarajuSSC;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
@@ -41,7 +41,7 @@ public class KasarajuSSCTest {
 
         List<List<AdjGraph.Node>> scc = new KasarajuSSC().findSCC(graph);
 
-        assertThat(scc.size(), Matchers.equalTo(3));
+        assertThat(scc.size(), Matchers.equalTo(4));
         assertThat(scc.get(0).size(), Matchers.equalTo(3));
     }
 

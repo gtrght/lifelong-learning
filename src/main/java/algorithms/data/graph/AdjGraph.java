@@ -50,7 +50,7 @@ public class AdjGraph {
         public Integer value;
         public Integer leader = null;
 
-        Node(Integer value) {
+        public Node(Integer value) {
             this.value = value;
         }
     }

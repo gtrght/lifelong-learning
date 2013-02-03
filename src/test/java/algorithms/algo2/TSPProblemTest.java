@@ -1,5 +1,8 @@
 package algorithms.algo2;
 
+import algorithms.data.graph.tss.TSPProblemBranchesBounds;
+import algorithms.data.graph.tss.TSPProblemDynamic;
+import algorithms.data.graph.tss.TSPProblemKruscal;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.Matchers;
 import org.junit.Before;

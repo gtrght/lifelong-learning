@@ -1,4 +1,4 @@
-package algorithms.algo2;
+package algorithms.data.graph.tss;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;

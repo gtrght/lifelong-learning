@@ -1,20 +1,15 @@
-package algorithms.algo2;
+package algorithms.data.graph;
 
 import com.google.common.base.Function;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
-import fj.data.Array;
 import org.apache.commons.io.IOUtils;
 import scala.Tuple2;
 
-import javax.annotation.Nullable;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
