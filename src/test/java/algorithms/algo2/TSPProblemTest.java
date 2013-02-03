@@ -104,7 +104,7 @@ public class TSPProblemTest {
     public void calculateTSPBoundsBurma() throws IOException {
         float shortestPath = new TSPProblemBranchesBounds().calculateTSP(14, createXYFunction("tsp-xy6.txt"));
 
-        assertThat(shortestPath, Matchers.equalTo(30f));
+        assertThat(shortestPath, Matchers.equalTo(30.8785f));
     }
 
     @Test
@@ -112,7 +112,7 @@ public class TSPProblemTest {
     public void calculateTSPBoundsLarge() throws IOException {
         float shortestPath = new TSPProblemBranchesBounds().calculateTSP(25, createXYFunction("tsp-xy1.txt"));
 
-        assertThat(shortestPath, Matchers.equalTo(9f));
+        assertThat(shortestPath, Matchers.equalTo(26442.723F));
     }
 
     @Test

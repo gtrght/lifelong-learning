@@ -1,4 +1,4 @@
-package algorithms.sort;
+package algorithms.data.array.sort;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;

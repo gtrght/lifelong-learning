@@ -1,4 +1,4 @@
-package algorithms.sort;
+package algorithms.data.array.sort;
 
 /**
  * User: Vasily Vlasov

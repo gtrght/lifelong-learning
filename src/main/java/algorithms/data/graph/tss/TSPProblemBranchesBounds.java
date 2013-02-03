@@ -1,7 +1,7 @@
 package algorithms.data.graph.tss;
 
+import algorithms.data.LazyUnion;
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import scala.Function2;
 import scala.Tuple4;
 
@@ -61,12 +61,13 @@ public class TSPProblemBranchesBounds implements TSPProblem {
 
 
     @SuppressWarnings("unchecked")
-    private float branch(float[][] edges, int[][] includes, int[] degree, float bestApproximation, int level) {
+    private float branch(float[][] edges, int[][] includes, int[] degree, LazyUnion<Integer> union, float bestApproximation, int level) {
         int length = edges.length;
 
         boolean finalState = true;
-        for (int aDegree : degree) {
-            if (aDegree != 2) {
+        int root = union.findRoot(0);
+        for (int i = 0; i < edges.length; i++) {
+            if (degree[i] < 2) {
                 finalState = false;
                 break;
             }
@@ -74,18 +75,17 @@ public class TSPProblemBranchesBounds implements TSPProblem {
 
         if (finalState) {
             float sum = sum(edges, includes);
-            if(sum < bestApproximation)
+            if (sum < bestApproximation)
                 System.out.println("Found a candidate: " + sum);
             return sum;
         }
 
         for (int i = 0; i < length; i++) {
             if (degree[i] == 2) continue;
+            root = union.findRoot(i);
 
             for (int j = i + 1; j < length; j++) {
-                if (edges[i][j] == Float.MAX_VALUE || degree[i] >= 2 ||
-                        includes[i][j] != 0 || (degree[i] == degree[j] &&
-                        degree[i] == 1 && hasUnfinishedWork(degree, i, j))) continue;
+                if (edges[i][j] == Float.MAX_VALUE || includes[i][j] != 0 || degree[j] == 2 || (root == union.findRoot(j) && !isFinalHop(degree, i, j))) continue;
                 includes[i][j] = 1;
                 includes[j][i] = 1;
                 degree = ArrayUtils.clone(degree);
@@ -118,19 +118,18 @@ public class TSPProblemBranchesBounds implements TSPProblem {
                         includes[j][i] = includes[i][j] = estimate._2();
 
 
-                        String determiner = (estimate._2() > 0 ? "+" : "-") + i + "," + j;
 
                         degree[j] = estimate._3();
                         degree[i] = estimate._4();
 
-                        if ("6,11".equals(determiner))
-                            System.out.print(' ');
-                        System.out.println(StringUtils.repeat(" ", level) + determiner + " (" + estimate + ")");
-                        float candidate = branch(edges, includes, degree, bestApproximation, level + 1);
+                        LazyUnion<Integer> clone = union.clone();
 
-                        if (i == 0 && j == 1) {
-                            System.out.println();
+                        if (estimate._2() > 0) {
+                            clone.merge(i, j);
                         }
+//                        String determiner = (estimate._2() > 0 ? "+" : "-") + i + "," + j;
+//                        System.out.println(determiner + " (" + estimate + ")");
+                        float candidate = branch(edges, includes, degree, clone, bestApproximation, level + 1);
 
                         if (candidate < bestApproximation) {
                             bestApproximation = candidate;
@@ -146,11 +145,16 @@ public class TSPProblemBranchesBounds implements TSPProblem {
         return bestApproximation;
     }
 
-    private boolean hasUnfinishedWork(int[] degree, int i, int j) {
-        for (int i1 = 0; i1 < degree.length; i1++) {
-            if (i1 != i && i1 != j && degree[i1] < 2) return true;
-        }
-        return false;
+    private boolean isFinalHop(int[] degree, int i, int j) {
+
+        if (degree[i] == 1 && degree[j] == 1) {
+            for (int k = 0; k < degree.length; k++) {
+                if (k == i || j == k) continue;
+                if (degree[k] != 2) return false;
+            }
+            return true;
+        } else
+            return false;
     }
 
     private float sum(float[][] edges, int[][] includes) {
@@ -179,9 +183,11 @@ public class TSPProblemBranchesBounds implements TSPProblem {
         float[][] edges = new float[numberOfPoints][numberOfPoints];
         int[][] includes = new int[numberOfPoints][numberOfPoints];
         int[] degrees = new int[numberOfPoints];
+        Integer[] nodes = new Integer[numberOfPoints];
 
         for (int i = 0; i < edges.length; i++) {
             degrees[i] = 0;
+            nodes[i] = i;
             for (int j = i; j < numberOfPoints; j++) {
                 edges[j][i] = edges[i][j] = i == j ? Float.MAX_VALUE : length.apply(i, j);
                 includes[j][i] = includes[i][j] = 0;
@@ -189,6 +195,6 @@ public class TSPProblemBranchesBounds implements TSPProblem {
         }
 
         float kruscal = new TSPProblemKruscal().calculateTSP(numberOfPoints, length);
-        return branch(edges, includes, degrees, kruscal, 0);
+        return branch(edges, includes, degrees, new LazyUnion<Integer>(nodes), kruscal, 0);
     }
 }

@@ -7,8 +7,8 @@ import scala.collection.JavaConversions._
  * Date: 26.01.13
  */
 class LazyUnion[T](objects: Seq[T]) {
-  private val obj2pos: Map[T, Int] = objects.zip(0 until objects.size).toMap
-  private val parents: Array[(Int, Int)] = (0 until objects.size).zip(Array.fill(objects.size) {
+  private var obj2pos: Map[T, Int] = objects.zip(0 until objects.size).toMap
+  private var parents: Array[(Int, Int)] = (0 until objects.size).zip(Array.fill(objects.size) {
     0
   }).toArray
 
@@ -50,4 +50,13 @@ class LazyUnion[T](objects: Seq[T]) {
   }
 
   def this(objects: java.util.List[T]) = this(objects.toIndexedSeq)
+  def this(objects: Array[T]) = this(objects.toIndexedSeq)
+
+  override def clone():LazyUnion[T] = {
+    val copy: LazyUnion[T] = new LazyUnion[T](new java.util.ArrayList[T]())
+    copy.parents = parents.clone()
+    copy.obj2pos = obj2pos
+
+    copy
+  }
 }

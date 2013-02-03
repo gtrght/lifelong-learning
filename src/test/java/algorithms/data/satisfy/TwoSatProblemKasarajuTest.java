@@ -1,8 +1,5 @@
 package algorithms.data.satisfy;
 
-import algorithms.data.graph.AdjGraph;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import org.hamcrest.Matchers;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -13,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -53,18 +49,25 @@ public class TwoSatProblemKasarajuTest {
     @Test
     @Ignore
     public void testHugeSamples() throws IOException {
+        long start = System.currentTimeMillis();
+        StringBuilder answer = new StringBuilder();
         for (int i = 1; i < 7; i++) {
             TwoSatProblemKasaraju solver = new TwoSatProblemKasaraju();
-            String fileName = String.format("/twosat/2sat%s.txt", i );
+            String fileName = String.format("/twosat/2sat%s.txt", i);
             Tuple2<Integer, List<Tuple2<Integer, Integer>>> tuple2 = readDisjunctions(fileName);
             boolean b = solver.checkSatisfiable(tuple2._2(), tuple2._1());
-            System.out.print(b ? 1 : 0);
+            answer.append(b ? 1 : 0);
         }
+
+        assertThat(answer.toString(), Matchers.equalTo("101100"));
+        long end = System.currentTimeMillis();
+
+        System.out.println(end - start);
     }
 
     private void testSatisfied(boolean answer, int i) throws IOException {
         TwoSatProblemKasaraju solver = new TwoSatProblemKasaraju();
-        String fileName = String.format("/twosat/test%s.txt", i );
+        String fileName = String.format("/twosat/test%s.txt", i);
         Tuple2<Integer, List<Tuple2<Integer, Integer>>> tuple2 = readDisjunctions(fileName);
         boolean b = solver.checkSatisfiable(tuple2._2(), tuple2._1());
         assertThat(fileName + " answer: " + b, Matchers.equalTo(fileName + " answer: " + answer));

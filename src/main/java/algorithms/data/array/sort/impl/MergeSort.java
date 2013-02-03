@@ -1,6 +1,6 @@
-package algorithms.sort.impl;
+package algorithms.data.array.sort.impl;
 
-import algorithms.sort.Sorter;
+import algorithms.data.array.sort.Sorter;
 
 /**
  * User: Vasily Vlasov
