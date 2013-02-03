@@ -19,6 +19,7 @@ public class Brackets {
 
     /**
      * Generates all possible brackets ordering
+     * Dosn't work :) going to rewrite this
      */
     private List<String> generate0(int length) {
 
