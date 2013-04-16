@@ -1,4 +1,13 @@
+import sys
+
 __author__ = 'vvlasov'
+
+
+def exchange_classic(x, y):
+    tmp = y
+    y = x
+    x = tmp
+    return x, y
 
 
 def exchange(x, y):
@@ -19,7 +28,7 @@ def palindrome(x):
         reverse += x % 2
         x >>= 1
 
-    return original & reverse == original
+    return reverse == original
 
 
 def add(x, y):
@@ -37,6 +46,6 @@ def add(x, y):
 
 print palindrome(5), palindrome(1), palindrome(11), palindrome(7), palindrome(8), palindrome(0), palindrome(-1)
 print exchange(5, 6), exchange(0, 1), exchange(-1, 100), exchange(5, 5)
-print add(0, 1), add(3, 1), add(6, 5)
+print add(0, 1), add(3, 1), add(6, 5), add(sys.maxint, 1)
 
 
