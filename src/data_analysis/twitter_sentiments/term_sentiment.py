@@ -19,7 +19,7 @@ def load_scores(fp):
 
 def estimate_term_sentiment(text):
     global scores, estimation
-    words = re.findall(r"[\w']+", text.lower())
+    words = filter(lambda x: len(x) > 0, re.split("[^@A-Za-z,]", text))
 
     result = sum(map(lambda x: scores.get(x, 0), words))
 
