@@ -151,3 +151,31 @@ while slow > fast:
     year += 1
 
 print year
+
+
+class Point2D:
+    def __init__(self, x=0, y=0):
+        self.x = x
+        self.y = y
+
+    def translate(self, deltax=0, deltay=0):
+        """Translate the point in the x direction by deltax
+           and in the y direction by deltay."""
+        self.x += deltax
+        self.y += deltay
+
+point = (3, 6)
+tup = tuple(point)
+
+
+def next(x):
+    return (x ** 2 + 79) % 997
+
+
+x = 1
+s = set()
+for i in range(1000):
+    s.add(x)
+    x = next(x)
+
+print len(list(s))
