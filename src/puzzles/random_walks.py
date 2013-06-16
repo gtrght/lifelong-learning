@@ -6,13 +6,13 @@ import numpy as np
 def generate_plain(tries, nsteps):
     walks = []
     for j in xrange(tries):
-        walk = []
+        walk = np.zeros(dtype=int, shape=nsteps)
         walks.append(walk)
         position = 0
         for i in xrange(nsteps):
             step = 1 if position == 0 or rd.randint(0, 1) else -1
             position += step
-            walk.append(position)
+            walk[i] = position
 
     return np.asarray(walks)
 
