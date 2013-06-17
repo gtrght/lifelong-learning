@@ -32,7 +32,7 @@ def tune_young_to_survived(age):
 #     tune_young_to_survived(i)
 
 # Estimating the pivot point
-# for price in range(100, int(frame['fare'].max()), 100):
+# for price in range(200, 300, 20):
 #     frame['cheap'] = np.where(frame['fare'] < price, 1, 0)
 #     print price, frame.groupby(['cheap', 'survived']).size()
 
@@ -40,8 +40,9 @@ def tune_young_to_survived(age):
 def prepare_frame(frame):
     frame['age'] = np.where(frame['age'] > 0, frame['age'], mean_age)
     frame['sex'] = np.where(frame['sex'] == 'female', 1, 0)
-    frame['young'] = np.where(frame['age'] < 9, 1, 0)
-    frame['cheap'] = np.where(frame['fare'] < 100, 1, 0)
+    frame['young'] = np.where(frame['age'] <= 2, 1, 0)
+    frame['cheap'] = np.where(frame['fare'] < 280, 1, 0)
+    frame['class'] = np.where(frame['pclass'] == 1, 1, 0)
 
 
 prepare_frame(frame)
@@ -49,13 +50,13 @@ prepare_frame(frame)
 
 
 forest = RandomForestClassifier(n_estimators=100)
-forest = forest.fit(frame[['sex', 'young', 'cheap', 'pclass']], frame['survived'])
+forest = forest.fit(frame[['sex', 'young', 'cheap', 'class']], frame['survived'])
 
 frame = pd.DataFrame(pd.read_table('../csv/test.csv', sep=','))
 
 prepare_frame(frame)
 
-prediction = forest.predict(frame[['sex', 'young', 'cheap', 'pclass']])
+prediction = forest.predict(frame[['sex', 'young', 'cheap', 'class']])
 
 with open("../csv/titanic.csv", "wb") as out_file:
     for row in prediction:
