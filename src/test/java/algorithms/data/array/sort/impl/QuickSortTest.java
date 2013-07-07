@@ -49,11 +49,6 @@ public class QuickSortTest {
         QuickSort sorter = new QuickSort();
         sorter.sort(input);
 
-        for (int item : input) {
-            System.out.print(item);
-            System.out.print(", ");
-        }
-        System.out.println();
         assertThat(sorter.comparisons, Matchers.equalTo(162085));
         assertThat(testArraySorted(input), Matchers.equalTo(true));
 
@@ -70,6 +65,8 @@ public class QuickSortTest {
 
         assertThat(sorter.comparisons, Matchers.equalTo(159894));
         assertThat(testArraySorted(input), Matchers.equalTo(true));
+
+//        System.arraycopy();
     }
 
     @Test

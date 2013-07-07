@@ -31,6 +31,23 @@
             <version>12.0.1</version>
         </dependency>
 
+        <!-- including R. Sedgewick's libraries just to finish assignments-->
+        <!--
+        mvn install:install-file -Dfile=algs4.jar -DgroupId=edu.princeton.algs4  -DartifactId=algs4 -Dversion=1.0.0 -Dpackaging=jar
+        mvn install:install-file -Dfile=stdlib.jar -DgroupId=edu.princeton.algs4  -DartifactId=stdlib -Dversion=1.0.0 -Dpackaging=jar
+        -->
+        <dependency>
+            <groupId>edu.princeton.algs4</groupId>
+            <artifactId>algs4</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>edu.princeton.algs4</groupId>
+            <artifactId>stdlib</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-compiler</artifactId>
