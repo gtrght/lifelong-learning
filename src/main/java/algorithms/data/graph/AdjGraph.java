@@ -3,6 +3,7 @@ package algorithms.data.graph;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -37,21 +38,54 @@ public class AdjGraph {
         return new AdjGraph(transpose);
     }
 
-    public Collection<Node> vertices() {
-        return nodes.keySet();
+    public List<Node> vertices() {
+        return new ArrayList<Node>(nodes.keySet());
     }
 
     public Collection<Node> edges(Node node) {
         return nodes.get(node);
     }
 
+    public int countEdges(Node node) {
+        return nodes.get(node).size();
+    }
+
 
     public static class Node {
+        public static final int EXPLORED = 1;
+        public static final int ADDED = 2;
+
+
         public Integer value;
-        public Integer leader = null;
+        public Node leader = null;
+        public int bitMask = 0;
+        public int finishingTime = Integer.MAX_VALUE;
 
         public Node(Integer value) {
             this.value = value;
         }
+
+        @Override
+        public String toString() {
+            return String.valueOf(value);
+        }
+
+        public boolean isExplored() {
+            return (bitMask & EXPLORED) > 0;
+        }
+
+        public void markExplored() {
+            bitMask |= EXPLORED;
+        }
+
+        public boolean isAdded() {
+            return (bitMask & ADDED) > 0;
+        }
+
+        public void markAdded() {
+            bitMask |= ADDED;
+        }
+
+
     }
 }

@@ -25,7 +25,7 @@ public class GraphUtils {
         HashMap<String, AdjGraph.Node> nodeMap = new HashMap<String, AdjGraph.Node>();
 
         while (reader.ready()) {
-            String[] split = reader.readLine().split(" ");
+            String[] split = reader.readLine().trim().split(" ");
 
             graphData.put(getOrCreate(split[0], nodeMap), getOrCreate(split[1], nodeMap));
         }

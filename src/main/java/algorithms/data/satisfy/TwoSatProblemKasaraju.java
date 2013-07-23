@@ -1,11 +1,14 @@
 package algorithms.data.satisfy;
 
 import algorithms.data.graph.AdjGraph;
-import algorithms.data.graph.KasarajuSSC;
+import algorithms.data.graph.KasarajuSCC;
 import com.google.common.collect.HashMultimap;
 import scala.Tuple2;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * User: Vasily Vlasov
@@ -18,7 +21,7 @@ public class TwoSatProblemKasaraju {
         AdjGraph adjGraph = createGraph(disjunctions, verticesCount);
 
 
-        for (List<AdjGraph.Node> scc : new KasarajuSSC().findSCC(adjGraph)) {
+        for (List<AdjGraph.Node> scc : new KasarajuSCC().findSCC(adjGraph)) {
             if (scc != null) {
                 Set<Integer> set = new HashSet<Integer>(scc.size());
 
