@@ -3,6 +3,8 @@ package algorithms.data.graph;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static algorithms.data.graph.AdjGraph.Node;
+
 /**
  * Search for Kasaraju's strongly connected components
  * User: Vasily Vlasov
@@ -10,38 +12,38 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class KasarajuSCC {
     private AdjGraph graphT;
-    private Stack<AdjGraph.Node> visitOrder;
+    private Stack<Node> visitOrder;
 
-    public List<List<AdjGraph.Node>> findSCC(final AdjGraph graph) {
-        List<AdjGraph.Node> vertices = graph.vertices();
+    public List<List<Node>> findSCC(final AdjGraph graph) {
+        List<Node> vertices = graph.nodes();
 
-        Collections.sort(vertices, new Comparator<AdjGraph.Node>() {
+        Collections.sort(vertices, new Comparator<Node>() {
             @Override
-            public int compare(AdjGraph.Node o1, AdjGraph.Node o2) {
+            public int compare(Node o1, Node o2) {
                 return graph.countEdges(o2) - graph.countEdges(o1);
             }
         });
 
-        visitOrder = new Stack<AdjGraph.Node>();
+        visitOrder = new Stack<Node>();
         AtomicInteger finishingTime = new AtomicInteger();
 
-        for (AdjGraph.Node vertex : vertices) {
-            if (!vertex.isExplored())
-                dfs(graph, vertex, vertex, finishingTime);
+        for (Node vertex : vertices) {
+            if (!vertex.isVisited())
+                dfsIterative(graph, vertex, vertex, finishingTime);
         }
 
         graphT = graph.transpose(false);
-        Collections.sort(vertices, new Comparator<AdjGraph.Node>() {
+        Collections.sort(vertices, new Comparator<Node>() {
             @Override
-            public int compare(AdjGraph.Node o1, AdjGraph.Node o2) {
+            public int compare(Node o1, Node o2) {
                 return -o1.finishingTime + o2.finishingTime;
             }
         });
 
 
-        List<List<AdjGraph.Node>> result = new LinkedList<List<AdjGraph.Node>>();
+        List<List<Node>> result = new LinkedList<List<Node>>();
 
-        for (AdjGraph.Node vertex : vertices) {
+        for (Node vertex : vertices) {
             if (!vertex.isAdded())
                 result.add(collect(graphT, vertex));
         }
@@ -49,13 +51,13 @@ public class KasarajuSCC {
         return result;
     }
 
-    private List<AdjGraph.Node> collect(AdjGraph graph, AdjGraph.Node vertex) {
+    private List<Node> collect(AdjGraph graph, Node vertex) {
 
-        Queue<AdjGraph.Node> queue = new LinkedList<AdjGraph.Node>();
+        Queue<Node> queue = new LinkedList<Node>();
         queue.offer(vertex);
 
-        AdjGraph.Node leader = vertex.leader;
-        ArrayList<AdjGraph.Node> cycle = new ArrayList<AdjGraph.Node>();
+        Node leader = vertex.leader;
+        ArrayList<Node> cycle = new ArrayList<Node>();
 
         while (queue.size() > 0) {
             vertex = queue.poll();
@@ -65,8 +67,8 @@ public class KasarajuSCC {
 
             vertex.markAdded();
 
-            Collection<AdjGraph.Node> edges = graph.edges(vertex);
-            for (AdjGraph.Node edge : edges) {
+            Collection<Node> edges = graph.edges(vertex);
+            for (Node edge : edges) {
                 if (!edge.isAdded() && edge.leader == leader) {
                     queue.offer(edge);
                 }
@@ -78,14 +80,14 @@ public class KasarajuSCC {
     }
 
 
-    private void dfs(AdjGraph graph, AdjGraph.Node vertex, AdjGraph.Node leader, AtomicInteger finishingTime) {
-        vertex.markExplored();
+    private void dfs(AdjGraph graph, Node vertex, Node leader, AtomicInteger finishingTime) {
+        vertex.markVisited();
         vertex.leader = leader;
 
-        Collection<AdjGraph.Node> edges = graph.edges(vertex);
+        Collection<Node> edges = graph.edges(vertex);
 
-        for (AdjGraph.Node edge : edges) {
-            if (!edge.isExplored())
+        for (Node edge : edges) {
+            if (!edge.isVisited())
                 dfs(graph, edge, leader, finishingTime);
         }
 
@@ -93,80 +95,13 @@ public class KasarajuSCC {
 
     }
 
-
-    private void dfs1(AdjGraph graph, AdjGraph.Node vertex, AtomicInteger finishingTime) {
-        Stack<AdjGraph.Node> toVisit = new Stack<AdjGraph.Node>();
-        Stack<AdjGraph.Node> visitedAncestors = new Stack<AdjGraph.Node>();
-        toVisit.push(vertex);
-        AdjGraph.Node leader = vertex;
-
-        while (!toVisit.empty()) {
-            vertex = toVisit.peek();
-            if (vertex.isExplored()) {
-                System.out.println("already explored: " + vertex);
+    private void dfsIterative(AdjGraph graph, final Node vertex, final Node leader,  final AtomicInteger finishingTime) {
+        new DFS().dfsPostOrderIterative(graph, vertex, new DFS.Callback() {
+            @Override
+            public void nodeVisited(AdjGraph graph, Node node) {
+                node.leader = vertex;
+                node.finishingTime = finishingTime.getAndIncrement();
             }
-
-            vertex.leader = leader;
-            vertex.markExplored();
-
-
-            Collection<AdjGraph.Node> edges = graph.edges(vertex);
-            if (edges.size() > 0) {
-                if (visitedAncestors.size() == 0 || visitedAncestors.peek() != vertex) {
-                    visitedAncestors.push(vertex);
-
-                    Iterator<AdjGraph.Node> descIterator = new LinkedList<AdjGraph.Node>(edges).descendingIterator();
-
-                    while (descIterator.hasNext()) {
-                        AdjGraph.Node edge = descIterator.next();
-                        if (!edge.isExplored()) {
-                            toVisit.push(edge);
-                        }
-                    }
-                    continue;
-                }
-                System.out.println(visitedAncestors.pop());
-            }
-            vertex = toVisit.pop();
-            vertex.finishingTime = finishingTime.incrementAndGet();
-        }
+        });
     }
-
-
-//    private void dfs(AdjGraph graph, AdjGraph.Node vertex, Stack<AdjGraph.Node> visitOrder, Integer leader, Collection<AdjGraph.Node> collect) {
-//        System.out.println("Traversing with leader: " + vertex);
-//        Stack<AdjGraph.Node> toVisit = new Stack<AdjGraph.Node>();
-//        Stack<AdjGraph.Node> visitedAncestors = new Stack<AdjGraph.Node>();
-//        toVisit.push(vertex);
-//
-//        while (!toVisit.empty()) {
-//            vertex = toVisit.peek();
-//            if (collect == null) {
-//                vertex.leader = leader;
-//            } else {
-//                vertex.leader = null;
-//            }
-//
-//            Collection<AdjGraph.Node> edges = graph.edges(vertex);
-//            if (edges.size() > 0) {
-//                if (visitedAncestors.size() == 0 || visitedAncestors.peek() != vertex) {
-//                    visitedAncestors.push(vertex);
-//
-//                    for (AdjGraph.Node edge : edges) {
-//                        if (!toVisit.contains(edge) && (collect == null && edge.leader == null) || (collect != null && leader.equals(edge.leader))) {
-//                            toVisit.push(edge);
-//                        }
-//                    }
-//                    continue;
-//                }
-//                visitedAncestors.pop();
-//            }
-//            vertex = toVisit.pop();
-//            if (collect == null) {
-//                visitOrder.push(vertex);
-//            } else {
-//                collect.add(vertex);
-//            }
-//        }
-//    }
 }

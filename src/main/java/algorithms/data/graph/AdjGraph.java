@@ -1,6 +1,7 @@
 package algorithms.data.graph;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
 import java.util.ArrayList;
@@ -38,12 +39,13 @@ public class AdjGraph {
         return new AdjGraph(transpose);
     }
 
-    public List<Node> vertices() {
+    public List<Node> nodes() {
         return new ArrayList<Node>(nodes.keySet());
     }
 
-    public Collection<Node> edges(Node node) {
-        return nodes.get(node);
+    public List<Node> edges(Node node) {
+        Collection<Node> collection = nodes.get(node);
+        return Lists.newArrayList(collection);
     }
 
     public int countEdges(Node node) {
@@ -53,7 +55,8 @@ public class AdjGraph {
 
     public static class Node {
         public static final int EXPLORED = 1;
-        public static final int ADDED = 2;
+        public static final int ADDED = 1 << 1;
+        public static final int CHILDREN_EXPLORED = 1 << 2;
 
 
         public Integer value;
@@ -70,11 +73,11 @@ public class AdjGraph {
             return String.valueOf(value);
         }
 
-        public boolean isExplored() {
+        public boolean isVisited() {
             return (bitMask & EXPLORED) > 0;
         }
 
-        public void markExplored() {
+        public void markVisited() {
             bitMask |= EXPLORED;
         }
 
@@ -86,6 +89,12 @@ public class AdjGraph {
             bitMask |= ADDED;
         }
 
+        public void markChildrenExplored() {
+            bitMask |= CHILDREN_EXPLORED;
+        }
 
+        public boolean isChildrenExplored() {
+            return (bitMask & CHILDREN_EXPLORED) > 0;
+        }
     }
 }

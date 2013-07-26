@@ -16,7 +16,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * User: Vasily Vlasov
  * Date: 03.02.13
  */
-public class KasarajuSSCTest {
+public class KasarajuSCCTest {
     @Test
     public void testFindSCC3() throws Exception {
         AdjGraph graph = GraphUtils.readAdjGraph("/kasaraju1.txt");
@@ -97,13 +97,10 @@ public class KasarajuSSCTest {
             }
         });
 
-
         System.out.println(scc.get(0).size());
         System.out.println(scc.get(1).size());
         System.out.println(scc.get(2).size());
         System.out.println(scc.get(3).size());
         System.out.println(scc.get(4).size());
     }
-
-
 }
