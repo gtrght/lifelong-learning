@@ -39,7 +39,7 @@ var financeurl = function (symbols, columns) {
 };
 
 var marketCapFloat = function (marketCapString) {
-    return parseFloat(marketCapString.split('B')[0]) * 1e9;
+    return parseFloat(marketCapString.split('B')[0]) * 1e9; //[1.9 , illions]
 };
 
 var csv2console = function (csvfile, headers) {
@@ -69,7 +69,7 @@ var buildfn = function (csvfile, headers) {
 };
 
 var marketResearch = function (symbols, columns, csvfile, headers) {
-    symbols = symbols || SYMBOLS_DEFAULT;
+    symbols = symbols || SYMBOLS_DEFAULT; //symbols == null ? SYMBOLS_DEFAULT : symbols;
     columns = columns || COLUMNS_DEFAULT;
     csvfile = csvfile || CSVFILE_DEFAULT;
     headers = headers || HEADERS_DEFAULT;
@@ -92,3 +92,12 @@ if (require.main == module) {
 }
 
 exports.marketResearch = marketResearch;
+
+//var buildAdder = function (increment) {
+//    return function (x) {
+//        return x + increment //x+3
+//    }
+//};
+//
+//var add3 = buildAdder(3);
+//console.log(add3(2));
