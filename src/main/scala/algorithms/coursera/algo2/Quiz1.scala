@@ -1,8 +1,6 @@
 package algorithms.coursera.algo2
 
 import io.Source
-import java.net.{URL, URI}
-import math.Ordering
 
 /**
  * User: vasily
@@ -74,7 +72,7 @@ object Quiz1 extends App {
         addedEdges
     }
 
-    val list: List[(Int, Int, Int)] = Source.fromURL(getClass.getResource("edges.txt")).getLines().map(
+    val list: List[(Int, Int, Int)] = Source.fromURL(getClass.getResource("adjacentNodes.txt")).getLines().map(
       (s: String) => {
         val split: Array[String] = s.split(" ")
         (augmentString(split(0)).toInt, augmentString(split(1)).toInt, augmentString(split(2)).toInt)

@@ -15,14 +15,14 @@ import java.util.HashMap;
  */
 public class GraphUtils {
 
-    public static AdjGraph readAdjGraph(String resource) throws IOException {
+    public static AdjGraph<KasarajuNode> readAdjGraph(String resource) throws IOException {
         InputStream inputStream = GraphUtils.class.getResourceAsStream(resource);
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
         Integer numberOfVertices = Integer.valueOf(reader.readLine());
-        Multimap<AdjGraph.Node, AdjGraph.Node> graphData = HashMultimap.create(numberOfVertices, 0);
-        HashMap<String, AdjGraph.Node> nodeMap = new HashMap<String, AdjGraph.Node>();
+        Multimap<KasarajuNode, KasarajuNode> graphData = HashMultimap.create(numberOfVertices, 0);
+        HashMap<String, KasarajuNode> nodeMap = new HashMap<String, KasarajuNode>();
 
         while (reader.ready()) {
             String[] split = reader.readLine().trim().split(" ");
@@ -30,14 +30,14 @@ public class GraphUtils {
             graphData.put(getOrCreate(split[0], nodeMap), getOrCreate(split[1], nodeMap));
         }
 
-        return new AdjGraph(graphData);
+        return new AdjGraph<KasarajuNode>(graphData);
     }
 
-    private static AdjGraph.Node getOrCreate(String s, HashMap<String, AdjGraph.Node> nodeMap) {
-        AdjGraph.Node node = nodeMap.get(s);
+    private static KasarajuNode getOrCreate(String s, HashMap<String, KasarajuNode> nodeMap) {
+        KasarajuNode node = nodeMap.get(s);
 
         if (node == null) {
-            node = new AdjGraph.Node(Integer.valueOf(s));
+            node = new KasarajuNode(Integer.valueOf(s));
             nodeMap.put(s, node);
         }
 

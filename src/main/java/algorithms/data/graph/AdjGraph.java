@@ -3,20 +3,26 @@ package algorithms.data.graph;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
+import com.othelle.jtuples.Tuple2;
+import com.othelle.jtuples.Tuples;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * User: Vasily Vlasov
  * Date: 03.02.13
  */
-public class AdjGraph {
-    private Multimap<Node, Node> nodes;
+public class AdjGraph<NodeType extends AdjGraph.Node> {
+    private Multimap<NodeType, NodeType> nodes;
+    private Map<Tuple2<NodeType, NodeType>, Number> weights;
 
-    public AdjGraph(Multimap<Node, Node> nodes) {
+    public AdjGraph() {
+        nodes = HashMultimap.create();
+        weights = new HashMap<Tuple2<NodeType, NodeType>, Number>();
+    }
+
+
+    public AdjGraph(Multimap<NodeType, NodeType> nodes) {
         this.nodes = nodes;
     }
 
@@ -25,76 +31,99 @@ public class AdjGraph {
      *
      * @param inplace if the search must be done inplace
      */
-    public AdjGraph transpose(boolean inplace) {
-        HashMultimap<Node, Node> transpose = HashMultimap.create(nodes.size(), nodes.size() == 0 ? 0 : nodes.values().size() / nodes.size() + 1);
+    public AdjGraph<NodeType> transpose(boolean inplace) {
+        HashMultimap<NodeType, NodeType> transpose = HashMultimap.create(nodes.size(), nodes.size() == 0 ? 0 : nodes.values().size() / nodes.size() + 1);
 
-        Set<Node> keys = nodes.keySet();
+        Set<NodeType> keys = nodes.keySet();
 
-        for (Node key : keys) {
-            Collection<Node> adjNodes = nodes.get(key);
-            for (Node adjNode : adjNodes) {
-                transpose.put(adjNode, key);
+        for (NodeType key : keys) {
+            Collection<NodeType> adjNodeTypes = nodes.get(key);
+            for (NodeType adjNodeType : adjNodeTypes) {
+                transpose.put(adjNodeType, key);
             }
         }
-        return new AdjGraph(transpose);
+        return new AdjGraph<NodeType>(transpose);
     }
 
-    public List<Node> nodes() {
-        return new ArrayList<Node>(nodes.keySet());
+    public List<NodeType> nodes() {
+        return new ArrayList<NodeType>(nodes.keySet());
     }
 
-    public List<Node> edges(Node node) {
-        Collection<Node> collection = nodes.get(node);
+    public List<NodeType> adjacentNodes(NodeType node) {
+        Collection<NodeType> collection = nodes.get(node);
         return Lists.newArrayList(collection);
     }
 
-    public int countEdges(Node node) {
+    public int countEdges(NodeType node) {
         return nodes.get(node).size();
     }
 
-
     public static class Node {
-        public static final int EXPLORED = 1;
-        public static final int ADDED = 1 << 1;
-        public static final int CHILDREN_EXPLORED = 1 << 2;
+        private String name;
 
 
-        public Integer value;
-        public Node leader = null;
-        public int bitMask = 0;
-        public int finishingTime = Integer.MAX_VALUE;
+        protected int flags = 0;
 
-        public Node(Integer value) {
-            this.value = value;
+        public boolean hasFlag(int flag) {
+            return (flags & flag) > 0;
+        }
+
+        public int setFlag(int flag) {
+            return flags |= flag;
+        }
+
+        public int removeFlag(int flag) {
+            return flags = setFlag(flag) ^ flag;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
 
         @Override
         public String toString() {
-            return String.valueOf(value);
+            return name;
         }
 
-        public boolean isVisited() {
-            return (bitMask & EXPLORED) > 0;
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Node)) return false;
+
+            Node node = (Node) o;
+
+            if (name != null ? !name.equals(node.name) : node.name != null) return false;
+
+            return true;
         }
 
-        public void markVisited() {
-            bitMask |= EXPLORED;
+        @Override
+        public int hashCode() {
+            return name != null ? name.hashCode() : 0;
         }
+    }
 
-        public boolean isAdded() {
-            return (bitMask & ADDED) > 0;
-        }
+    public Number getWeight(NodeType a, NodeType b) {
+        Number value = weights.get(Tuples.tuple(a, b));
 
-        public void markAdded() {
-            bitMask |= ADDED;
-        }
+        return value != null ? value : Integer.MAX_VALUE;
+    }
 
-        public void markChildrenExplored() {
-            bitMask |= CHILDREN_EXPLORED;
-        }
+    public void addEdge(NodeType a, NodeType b, Number weight) {
+        nodes.put(getNode(a), getNode(b));
+        weights.put(Tuples.tuple(getNode(a), getNode(b)), weight);
+    }
 
-        public boolean isChildrenExplored() {
-            return (bitMask & CHILDREN_EXPLORED) > 0;
+    private Map<NodeType, NodeType> cachedNodes = new HashMap<NodeType, NodeType>();
+
+    public NodeType getNode(NodeType node) {
+        if (!cachedNodes.containsKey(node)) {
+            cachedNodes.put(node, node);
         }
+        return cachedNodes.get(node);
     }
 }

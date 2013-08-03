@@ -14,10 +14,10 @@ import java.util.Stack;
 public class DFS {
 
 
-    public void printDfsPostOrder(AdjGraph graph, AdjGraph.Node vertex, boolean recursive) {
+    public void printDfsPostOrder(AdjGraph graph, KasarajuNode vertex, boolean recursive) {
         Callback printCallback = new Callback() {
             @Override
-            public void nodeVisited(AdjGraph graph, AdjGraph.Node node) {
+            public void nodeVisited(AdjGraph graph, KasarajuNode node) {
                 System.out.println(node);
             }
         };
@@ -28,14 +28,14 @@ public class DFS {
             dfsPostOrderRecursive(graph, vertex, printCallback);
     }
 
-    public void dfsPostOrderRecursive(AdjGraph graph, AdjGraph.Node vertex, Callback callback) {
+    public void dfsPostOrderRecursive(AdjGraph graph, KasarajuNode vertex, Callback callback) {
         if (vertex.isVisited())
             return;
 
         vertex.markVisited();
 
-        List<AdjGraph.Node> edges = graph.edges(vertex);
-        for (AdjGraph.Node node : edges) {
+        List<KasarajuNode> edges = graph.adjacentNodes(vertex);
+        for (KasarajuNode node : edges) {
             if (!node.isVisited())
                 dfsPostOrderRecursive(graph, node, callback);
         }
@@ -43,7 +43,7 @@ public class DFS {
         callback.nodeVisited(graph, vertex);  //post order call to callback
     }
 
-    public void dfsPostOrderIterative(AdjGraph graph, AdjGraph.Node vertex, Callback callback) {
+    public void dfsPostOrderIterative(AdjGraph<KasarajuNode> graph, KasarajuNode vertex, Callback callback) {
         Stack<Level> toVisit = new Stack<Level>();
         toVisit.push(new Level(Collections.singletonList(vertex)));
 
@@ -55,7 +55,7 @@ public class DFS {
                 continue;
             }
 
-            AdjGraph.Node node = level.nodes.get(level.index);
+            KasarajuNode node = level.nodes.get(level.index);
 
             if (!node.isVisited()) {
                 if (node.isChildrenExplored()) {
@@ -63,10 +63,10 @@ public class DFS {
                     callback.nodeVisited(graph, node);
                     level.index++;
                 } else {
-                    List<AdjGraph.Node> edges = graph.edges(node);
-                    List<AdjGraph.Node> outgoing = Lists.newArrayList(Collections2.filter(edges, new Predicate<AdjGraph.Node>() {
+                    List<KasarajuNode> edges = graph.adjacentNodes(node);
+                    List<KasarajuNode> outgoing = Lists.newArrayList(Collections2.filter(edges, new Predicate<KasarajuNode>() {
                         @Override
-                        public boolean apply(AdjGraph.Node input) {
+                        public boolean apply(KasarajuNode input) {
                             return !input.isChildrenExplored();
                         }
                     }));
@@ -84,14 +84,14 @@ public class DFS {
 
     public static class Level {
         int index = 0;
-        List<AdjGraph.Node> nodes;
+        List<KasarajuNode> nodes;
 
-        Level(List<AdjGraph.Node> nodes) {
+        Level(List<KasarajuNode> nodes) {
             this.nodes = nodes;
         }
     }
 
     public interface Callback {
-        void nodeVisited(AdjGraph graph, AdjGraph.Node node);
+        void nodeVisited(AdjGraph graph, KasarajuNode node);
     }
 }

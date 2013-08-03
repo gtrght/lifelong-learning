@@ -11,11 +11,11 @@ import java.util.List;
 public class DFSTest {
     @Test
     public void testPrintDfsPostOrder() throws Exception {
-        AdjGraph graph = GraphUtils.readAdjGraph("/dfs_post_order.txt");
-        List<AdjGraph.Node> nodes = graph.nodes();
+        AdjGraph<KasarajuNode> graph = GraphUtils.readAdjGraph("/dfs_post_order.txt");
+        List<KasarajuNode> nodes = graph.nodes();
 
-        AdjGraph.Node start = null;
-        for (AdjGraph.Node node : nodes) {
+        KasarajuNode start = null;
+        for (KasarajuNode node : nodes) {
             if (node.toString().equals("1"))
                 start = node;
 
@@ -26,11 +26,11 @@ public class DFSTest {
 
     @Test
     public void testPrintDfsPostOrderRec() throws IOException {
-        AdjGraph graph = GraphUtils.readAdjGraph("/dfs_post_order.txt");
-        List<AdjGraph.Node> nodes = graph.nodes();
+        AdjGraph<KasarajuNode> graph = GraphUtils.readAdjGraph("/dfs_post_order.txt");
+        List<KasarajuNode> nodes = graph.nodes();
 
-        AdjGraph.Node start = null;
-        for (AdjGraph.Node node : nodes) {
+        KasarajuNode start = null;
+        for (KasarajuNode node : nodes) {
             if (node.toString().equals("1"))
                 start = node;
 

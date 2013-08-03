@@ -2,6 +2,7 @@ package algorithms.algo2;
 
 import algorithms.data.graph.AdjGraph;
 import algorithms.data.graph.GraphUtils;
+import algorithms.data.graph.KasarajuNode;
 import algorithms.data.graph.KasarajuSCC;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -19,9 +20,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class KasarajuSCCTest {
     @Test
     public void testFindSCC3() throws Exception {
-        AdjGraph graph = GraphUtils.readAdjGraph("/kasaraju1.txt");
+        AdjGraph<KasarajuNode> graph = GraphUtils.readAdjGraph("/kasaraju1.txt");
 
-        List<List<AdjGraph.Node>> scc = new KasarajuSCC().findSCC(graph);
+        List<List<KasarajuNode>> scc = new KasarajuSCC().findSCC(graph);
 
         assertThat(scc.size(), Matchers.equalTo(1));
         assertThat(scc.get(0).size(), Matchers.equalTo(3));
@@ -29,9 +30,9 @@ public class KasarajuSCCTest {
 
     @Test
     public void testFindSCC4() throws Exception {
-        AdjGraph graph = GraphUtils.readAdjGraph("/kasaraju2.txt");
+        AdjGraph<KasarajuNode> graph = GraphUtils.readAdjGraph("/kasaraju2.txt");
 
-        List<List<AdjGraph.Node>> scc = new KasarajuSCC().findSCC(graph);
+        List<List<KasarajuNode>> scc = new KasarajuSCC().findSCC(graph);
 
         assertThat(scc.size(), Matchers.equalTo(1));
         assertThat(scc.get(0).size(), Matchers.equalTo(3));
@@ -39,9 +40,9 @@ public class KasarajuSCCTest {
 
     @Test
     public void testFindSCC8() throws Exception {
-        AdjGraph graph = GraphUtils.readAdjGraph("/kasaraju3.txt");
+        AdjGraph<KasarajuNode> graph = GraphUtils.readAdjGraph("/kasaraju3.txt");
 
-        List<List<AdjGraph.Node>> scc = new KasarajuSCC().findSCC(graph);
+        List<List<KasarajuNode>> scc = new KasarajuSCC().findSCC(graph);
 
         assertThat(scc.size(), Matchers.equalTo(4));
         assertThat(scc.get(0).size(), Matchers.equalTo(3));
@@ -49,13 +50,13 @@ public class KasarajuSCCTest {
 
     @Test
     public void testFindSCC9() throws Exception {
-        AdjGraph graph = GraphUtils.readAdjGraph("/kasaraju5.txt");
+        AdjGraph<KasarajuNode> graph = GraphUtils.readAdjGraph("/kasaraju5.txt");
 
-        List<List<AdjGraph.Node>> scc = new KasarajuSCC().findSCC(graph);
+        List<List<KasarajuNode>> scc = new KasarajuSCC().findSCC(graph);
 
-        Collections.sort(scc, new Comparator<List<AdjGraph.Node>>() {
+        Collections.sort(scc, new Comparator<List<KasarajuNode>>() {
             @Override
-            public int compare(List<AdjGraph.Node> o1, List<AdjGraph.Node> o2) {
+            public int compare(List<KasarajuNode> o1, List<KasarajuNode> o2) {
                 return o2.size() - o1.size();
             }
         });
@@ -67,13 +68,13 @@ public class KasarajuSCCTest {
 
     @Test
     public void testFindSCC9_1() throws Exception {
-        AdjGraph graph = GraphUtils.readAdjGraph("/kasaraju6.txt");
+        AdjGraph<KasarajuNode> graph = GraphUtils.readAdjGraph("/kasaraju6.txt");
 
-        List<List<AdjGraph.Node>> scc = new KasarajuSCC().findSCC(graph);
+        List<List<KasarajuNode>> scc = new KasarajuSCC().findSCC(graph);
 
-        Collections.sort(scc, new Comparator<List<AdjGraph.Node>>() {
+        Collections.sort(scc, new Comparator<List<KasarajuNode>>() {
             @Override
-            public int compare(List<AdjGraph.Node> o1, List<AdjGraph.Node> o2) {
+            public int compare(List<KasarajuNode> o1, List<KasarajuNode> o2) {
                 return o2.size() - o1.size();
             }
         });
@@ -86,13 +87,13 @@ public class KasarajuSCCTest {
 
     @Test
     public void testFindSCCHuge() throws Exception {
-        AdjGraph graph = GraphUtils.readAdjGraph("/kasaraju4.txt");
+        AdjGraph<KasarajuNode> graph = GraphUtils.readAdjGraph("/kasaraju4.txt");
 
-        List<List<AdjGraph.Node>> scc = new KasarajuSCC().findSCC(graph);
+        List<List<KasarajuNode>> scc = new KasarajuSCC().findSCC(graph);
 
-        Collections.sort(scc, new Comparator<List<AdjGraph.Node>>() {
+        Collections.sort(scc, new Comparator<List<KasarajuNode>>() {
             @Override
-            public int compare(List<AdjGraph.Node> o1, List<AdjGraph.Node> o2) {
+            public int compare(List<KasarajuNode> o1, List<KasarajuNode> o2) {
                 return o2.size() - o1.size();
             }
         });
