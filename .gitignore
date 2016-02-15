@@ -35,3 +35,12 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+*.iml
+target
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
